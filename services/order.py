@@ -5,14 +5,15 @@ from django.utils.dateparse import parse_datetime
 
 from db.models import Order, Ticket
 
+
 @transaction.atomic
 def create_order(
         tickets: list[dict],
         username: str,
         date: str = None,
 ) -> Order:
-    User = get_user_model()
-    user = User.objects.get(username=username)
+    user = get_user_model()
+    user = user.objects.get(username=username)
 
     order = Order.objects.create(user=user)
 
