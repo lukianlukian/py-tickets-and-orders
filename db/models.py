@@ -1,9 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
-
-
 from django.conf import settings
+
 
 class Genre(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -50,6 +49,7 @@ class Order(models.Model):
         on_delete=models.CASCADE
     )
 
+
 class MovieSession(models.Model):
     show_time = models.DateTimeField()
     cinema_hall = models.ForeignKey(
@@ -61,6 +61,7 @@ class MovieSession(models.Model):
 
     def __str__(self) -> str:
         return f"{self.movie.title} {str(self.show_time)}"
+
 
 class Ticket(models.Model):
     movie_session = models.ForeignKey(
@@ -74,12 +75,11 @@ class Ticket(models.Model):
     row = models.IntegerField()
     seat = models.IntegerField()
 
-    def clean(self):
+    def clean(self) -> None:
         if not self.movie_session or not self.movie_session.cinema_hall:
             raise ValidationError("Movie session and cinema hall must be set")
 
         cinema_hall = self.movie_session.cinema_hall
-
 
         if not (1 <= self.row <= cinema_hall.rows):
             raise ValidationError(
@@ -91,7 +91,7 @@ class Ticket(models.Model):
                 f"Seat must be between 1 and {cinema_hall.seats_in_row}"
             )
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         self.full_clean()
         return super().save(*args, **kwargs)
 

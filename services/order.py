@@ -1,7 +1,7 @@
 from django.db import transaction
+from django.db.models import QuerySet
 
-from db.models import Order, Ticket, MovieSession, User
-from settings import AUTH_USER_MODEL
+from db.models import Order, Ticket, User
 
 
 def create_order(
@@ -30,7 +30,8 @@ def create_order(
             )
         return order
 
-def get_user(username : str = None):
+
+def get_user(username : str = None) -> QuerySet:
     if username:
         return Order.objects.filter(user__username=username)
     return Order.objects.all()
